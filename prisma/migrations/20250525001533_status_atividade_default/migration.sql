@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE `professor` MODIFY `statusAtividade` ENUM('ATIVO', 'AFASTADO', 'LICENCA', 'NAO_ATIVO') NOT NULL DEFAULT 'ATIVO';

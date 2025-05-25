@@ -1,0 +1,651 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Cadastro App API",
+    "version": "1.0.0",
+    "description": "API RESTful para gerenciamento de cursos, professores, mat\u00e9rias e usu\u00e1rios. Documenta\u00e7\u00e3o completa de todas as rotas."
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3000",
+      "description": "Servidor de Desenvolvimento Local"
+    },
+    {
+      "url": "https://api.exemplo.com",
+      "description": "Servidor de Produ\u00e7\u00e3o (em breve, edite esta URL conforme necess\u00e1rio)"
+    }
+  ],
+  "paths": {
+    "/professores": {
+      "get": {
+        "summary": "Lista todos os professores",
+        "responses": {
+          "200": {
+            "description": "Lista de professores retornada com sucesso"
+          }
+        },
+        "tags": [
+          "Professores"
+        ]
+      },
+      "post": {
+        "summary": "Cria um novo professor",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Professor"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Professor criado com sucesso"
+          }
+        },
+        "tags": [
+          "Professores"
+        ]
+      }
+    },
+    "/professores/{id}": {
+      "get": {
+        "summary": "Busca um professor por ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Professor encontrado"
+          },
+          "404": {
+            "description": "N\u00e3o encontrado"
+          }
+        },
+        "tags": [
+          "Professores"
+        ]
+      },
+      "put": {
+        "summary": "Atualiza um professor",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Professor"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Professor atualizado"
+          }
+        },
+        "tags": [
+          "Professores"
+        ]
+      },
+      "delete": {
+        "summary": "Remove um professor",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Professor removido"
+          }
+        },
+        "tags": [
+          "Professores"
+        ]
+      }
+    },
+    "/auth/login": {
+      "post": {
+        "summary": "Realiza login e gera um token JWT",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string"
+                  },
+                  "senha": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "email",
+                  "senha"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Token JWT retornado"
+          },
+          "401": {
+            "description": "Credenciais inv\u00e1lidas"
+          }
+        },
+        "tags": [
+          "Autentica\u00e7\u00e3o"
+        ]
+      }
+    },
+    "/cursos": {
+      "get": {
+        "summary": "Lista todos os cursos",
+        "responses": {
+          "200": {
+            "description": "Lista de cursos retornada com sucesso"
+          }
+        },
+        "tags": [
+          "Cursos"
+        ]
+      },
+      "post": {
+        "summary": "Cria um novo curso",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Curso"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Curso criado com sucesso"
+          }
+        },
+        "tags": [
+          "Cursos"
+        ]
+      }
+    },
+    "/cursos/{id}": {
+      "get": {
+        "summary": "Busca um curso por ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Curso encontrado"
+          },
+          "404": {
+            "description": "N\u00e3o encontrado"
+          }
+        },
+        "tags": [
+          "Cursos"
+        ]
+      },
+      "put": {
+        "summary": "Atualiza um curso",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Curso"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Curso atualizado"
+          }
+        },
+        "tags": [
+          "Cursos"
+        ]
+      },
+      "delete": {
+        "summary": "Remove um curso",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Curso removido"
+          }
+        },
+        "tags": [
+          "Cursos"
+        ]
+      }
+    },
+    "/materias": {
+      "get": {
+        "summary": "Lista todas as mat\u00e9rias",
+        "responses": {
+          "200": {
+            "description": "Lista de mat\u00e9rias retornada com sucesso"
+          }
+        },
+        "tags": [
+          "Mat\u00e9rias"
+        ]
+      },
+      "post": {
+        "summary": "Cria uma nova mat\u00e9ria",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Materia"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Mat\u00e9ria criada com sucesso"
+          }
+        },
+        "tags": [
+          "Mat\u00e9rias"
+        ]
+      }
+    },
+    "/materias/{id}": {
+      "get": {
+        "summary": "Busca uma mat\u00e9ria por ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Mat\u00e9ria encontrada"
+          },
+          "404": {
+            "description": "N\u00e3o encontrada"
+          }
+        },
+        "tags": [
+          "Mat\u00e9rias"
+        ]
+      },
+      "put": {
+        "summary": "Atualiza uma mat\u00e9ria",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Materia"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Mat\u00e9ria atualizada"
+          }
+        },
+        "tags": [
+          "Mat\u00e9rias"
+        ]
+      },
+      "delete": {
+        "summary": "Remove uma mat\u00e9ria",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Mat\u00e9ria removida"
+          }
+        },
+        "tags": [
+          "Mat\u00e9rias"
+        ]
+      }
+    },
+    "/usuarios": {
+      "get": {
+        "summary": "Lista todos os usu\u00e1rios",
+        "responses": {
+          "200": {
+            "description": "Lista de usu\u00e1rios retornada com sucesso"
+          }
+        },
+        "tags": [
+          "Usu\u00e1rios"
+        ]
+      },
+      "post": {
+        "summary": "Cria um novo usu\u00e1rio",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Usuario"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Usu\u00e1rio criado com sucesso"
+          }
+        },
+        "tags": [
+          "Usu\u00e1rios"
+        ]
+      }
+    },
+    "/usuarios/{id}": {
+      "get": {
+        "summary": "Busca um usu\u00e1rio por ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Usu\u00e1rio encontrado"
+          },
+          "404": {
+            "description": "N\u00e3o encontrado"
+          }
+        },
+        "tags": [
+          "Usu\u00e1rios"
+        ]
+      },
+      "put": {
+        "summary": "Atualiza um usu\u00e1rio",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Usuario"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Usu\u00e1rio atualizado"
+          }
+        },
+        "tags": [
+          "Usu\u00e1rios"
+        ]
+      },
+      "delete": {
+        "summary": "Remove um usu\u00e1rio",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Usu\u00e1rio removido"
+          }
+        },
+        "tags": [
+          "Usu\u00e1rios"
+        ]
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Professor": {
+        "type": "object",
+        "properties": {
+          "nome": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "titulacao": {
+            "type": "string",
+            "enum": [
+              "DOUTOR",
+              "MESTRE",
+              "ESPECIALISTA"
+            ]
+          },
+          "idUnidade": {
+            "type": "string"
+          },
+          "referencia": {
+            "type": "string"
+          },
+          "lattes": {
+            "type": "string"
+          },
+          "statusAtividade": {
+            "type": "string",
+            "enum": [
+              "ATIVO",
+              "AFASTADO",
+              "LICENCA",
+              "NAO_ATIVO"
+            ]
+          },
+          "observacoes": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "nome",
+          "email",
+          "titulacao",
+          "idUnidade",
+          "referencia",
+          "lattes",
+          "statusAtividade"
+        ]
+      },
+      "Curso": {
+        "type": "object",
+        "properties": {
+          "nome": {
+            "type": "string"
+          },
+          "codigo": {
+            "type": "string"
+          },
+          "sigla": {
+            "type": "string"
+          },
+          "modelo": {
+            "type": "string",
+            "enum": [
+              "PRESENCIAL",
+              "HIBRIDO",
+              "EAD"
+            ]
+          },
+          "coordenadorId": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "nome",
+          "codigo",
+          "sigla",
+          "modelo",
+          "coordenadorId"
+        ]
+      },
+      "Materia": {
+        "type": "object",
+        "properties": {
+          "nome": {
+            "type": "string"
+          },
+          "cargaHoraria": {
+            "type": "integer"
+          },
+          "professorId": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "nome",
+          "cargaHoraria",
+          "professorId"
+        ]
+      },
+      "Usuario": {
+        "type": "object",
+        "properties": {
+          "nome": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "senha": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "nome",
+          "email",
+          "senha"
+        ]
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "Professores",
+      "description": "Opera\u00e7\u00f5es relacionadas aos professores"
+    },
+    {
+      "name": "Cursos",
+      "description": "Opera\u00e7\u00f5es relacionadas aos cursos"
+    },
+    {
+      "name": "Mat\u00e9rias",
+      "description": "Opera\u00e7\u00f5es relacionadas \u00e0s mat\u00e9rias"
+    },
+    {
+      "name": "Usu\u00e1rios",
+      "description": "Opera\u00e7\u00f5es relacionadas aos usu\u00e1rios"
+    },
+    {
+      "name": "Autentica\u00e7\u00e3o",
+      "description": "Opera\u00e7\u00f5es de autentica\u00e7\u00e3o e login"
+    }
+  ]
+}

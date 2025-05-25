@@ -1,0 +1,125 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+enum Titulacao {
+  DOUTOR
+  MESTRE
+  ESPECIALISTA
+}
+
+enum StatusAtividade {
+  ATIVO
+  AFASTADO
+  LICENCA
+  NAO_ATIVO
+}
+
+enum ModeloCurso {
+  PRESENCIAL
+  HIBRIDO
+  EAD
+}
+
+enum Referencia {
+  PES_I_A
+  PES_I_B
+  PES_I_C
+  PES_I_D
+  PES_I_E
+  PES_I_F
+  PES_I_G
+  PES_I_H
+  PES_II_A
+  PES_II_B
+  PES_II_C
+  PES_II_D
+  PES_II_E
+  PES_II_F
+  PES_II_G
+  PES_II_H
+  PES_III_A
+  PES_III_B
+  PES_III_C
+  PES_III_D
+  PES_III_E
+  PES_III_F
+  PES_III_G
+  PES_III_H
+}
+
+enum Turno {
+  MATUTINO
+  VESPERTINO
+  NOTURNO
+}
+
+enum TipoMateria {
+  OBRIGATORIA
+  OPTATIVA
+}
+
+model Professor {
+  id                 Int       @id @default(autoincrement())
+  nome               String
+  email              String    @unique
+  titulacao          Titulacao
+  idUnidade          String    @db.VarChar(5)
+  referencia         Referencia
+  lattes             String @unique
+  statusAtividade    StatusAtividade @default(ATIVO)
+  observacoes        String?
+
+  materias           Materia[]
+  cursoCoordenado    Curso? @relation("CoordenadorCurso")
+}
+
+
+model Materia {
+  id           Int       @id @default(autoincrement())
+  nome         String
+  cargaHoraria Int
+
+  professorId  Int 
+  professor    Professor @relation(fields: [professorId], references: [id])
+
+  cursos       CursoMateria[]
+}
+
+model Curso {
+  id             Int       @id @default(autoincrement())
+  nome           String
+  codigo         String    @db.VarChar(4) @unique
+  sigla          String    @db.VarChar(4)
+  modelo         ModeloCurso
+
+  coordenadorId  Int @unique
+  coordenador    Professor @relation("CoordenadorCurso", fields: [coordenadorId], references: [id])
+
+  materias       CursoMateria[]
+}
+
+model CursoMateria {
+  cursoId   Int
+  materiaId Int
+  semestre  Int
+  turno     Turno
+  tipo      TipoMateria
+
+  curso     Curso   @relation(fields: [cursoId], references: [id])
+  materia   Materia @relation(fields: [materiaId], references: [id])
+
+  @@id([cursoId, materiaId])
+}
+
+model Usuario {
+  id    Int    @id @default(autoincrement())
+  nome  String
+  email String @unique
+  senha String
+}

@@ -1,0 +1,36 @@
+import { z } from 'zod';
+
+export const createProfessorSchema = z.object({
+  nome: z.string()
+    .max(50, 'Nome deve ter no máximo 50 caracteres')
+    .regex(/^[A-Za-zÀ-ú\s]+$/, 'Nome deve conter apenas letras'),
+
+  email: z.string()
+    .email('Email inválido'),
+
+  titulacao: z.enum(['DOUTOR', 'MESTRE', 'ESPECIALISTA'], {
+    errorMap: () => ({ message: 'Titulação inválida' })
+  }),
+
+  idUnidade: z.string()
+    .min(1, 'ID da unidade deve ter no mínimo 1 caractere')
+    .max(5, 'ID da unidade deve ter no máximo 5 caracteres')
+    .regex(/^\d+$/, 'ID da unidade deve conter apenas números'),
+
+  referencia: z.string()
+    .regex(/^PES_(I|II|III)_[A-H]$/, 'Formato de referência inválido'),
+
+  lattes: z.string()
+    .url('URL do Lattes inválida'),
+
+  statusAtividade: z.enum(['ATIVO', 'AFASTADO', 'LICENCA', 'NAO_ATIVO'], {
+    errorMap: () => ({ message: 'Status de atividade inválido' })
+  }),
+
+  observacoes: z.string().optional()
+});
+
+export const updateProfessorSchema = createProfessorSchema.partial();
+
+export type CreateProfessorDto = z.infer<typeof createProfessorSchema>;
+export type UpdateProfessorDto = z.infer<typeof updateProfessorSchema>;
