@@ -501,7 +501,73 @@
           "Usu\u00e1rios"
         ]
       }
+    },
+    "/enum/titulacao": {
+    "get": {
+      "summary": "Obtém as titulações disponíveis",
+      "responses": {
+        "200": { "description": "Titulações encontradas com sucesso" },
+        "400": { "description": "Erro ao buscar titulações" }
+      },
+      "security": [ { "bearerAuth": [] } ],
+      "tags": [ "Enums" ]
     }
+  },
+  "/enum/statusAtividade": {
+    "get": {
+      "summary": "Obtém os status de atividade disponíveis",
+      "responses": {
+        "200": { "description": "Status de Atividades encontrados com sucesso" },
+        "400": { "description": "Erro ao buscar Status de Atividades" }
+      },
+      "security": [ { "bearerAuth": [] } ],
+      "tags": [ "Enums" ]
+    }
+  },
+  "/enum/modeloCurso": {
+    "get": {
+      "summary": "Obtém os modelos de curso disponíveis",
+      "responses": {
+        "200": { "description": "Modelos de Curso encontrados com sucesso" },
+        "400": { "description": "Erro ao buscar Modelos de Curso" }
+      },
+      "security": [ { "bearerAuth": [] } ],
+      "tags": [ "Enums" ]
+    }
+  },
+  "/enum/referencia": {
+    "get": {
+      "summary": "Obtém as referências disponíveis",
+      "responses": {
+        "200": { "description": "Referências encontradas com sucesso" },
+        "400": { "description": "Erro ao buscar Referências" }
+      },
+      "security": [ { "bearerAuth": [] } ],
+      "tags": [ "Enums" ]
+    }
+  },
+  "/enum/turno": {
+    "get": {
+      "summary": "Obtém os turnos disponíveis",
+      "responses": {
+        "200": { "description": "Turnos encontrados com sucesso" },
+        "400": { "description": "Erro ao buscar Turnos" }
+      },
+      "security": [ { "bearerAuth": [] } ],
+      "tags": [ "Enums" ]
+    }
+  },
+  "/enum/tipoMateria": {
+    "get": {
+      "summary": "Obtém os tipos de matéria disponíveis",
+      "responses": {
+        "200": { "description": "Tipos de Matéria encontrados com sucesso" },
+        "400": { "description": "Erro ao buscar Tipos de Matéria" }
+      },
+      "security": [ { "bearerAuth": [] } ],
+      "tags": [ "Enums" ]
+    }
+  }
   },
   "components": {
     "schemas": {
@@ -646,6 +712,10 @@
     {
       "name": "Autentica\u00e7\u00e3o",
       "description": "Opera\u00e7\u00f5es de autentica\u00e7\u00e3o e login"
+    },
+    {
+      "name": "Enums",
+      "description": "Operações relacionadas aos valores enumerados usados na aplicação"
     }
   ]
 }
