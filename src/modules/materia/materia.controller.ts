@@ -35,8 +35,12 @@ export async function getById(req: Request, res: Response) {
 export async function update(req: Request, res: Response) {
   try {
     const id = Number(req.params.id);
-    const materia = await materiaService.updateMateria(id, req.body);
-    return res.status(200).json({ mensagem: "Matéria atualizada com sucesso", data: materia });
+
+    const materia = await materiaService.getMateriaById(id);
+    if (!materia) return res.status(404).json({ mensagem: 'Matéria não encontrada' });
+
+    const materiaAtualizada = await materiaService.updateMateria(id, req.body);
+    return res.status(200).json({ mensagem: "Matéria atualizada com sucesso", data: materiaAtualizada });
   } catch (error) {
     return res.status(400).json({ mensagem: "Erro ao atualizar matéria", erro: (error as Error).message });
   }
@@ -45,6 +49,10 @@ export async function update(req: Request, res: Response) {
 export async function remove(req: Request, res: Response) {
   try {
     const id = Number(req.params.id);
+
+    const materia = await materiaService.getMateriaById(id);
+    if (!materia) return res.status(404).json({ mensagem: 'Matéria não encontrada' });
+
     await materiaService.deleteMateria(id);
     return res.status(204).json({ mensagem: "Matéria deletada com sucesso" });
   } catch (error) {

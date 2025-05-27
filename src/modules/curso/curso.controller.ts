@@ -35,8 +35,12 @@ export async function getById(req: Request, res: Response) {
 export async function update(req: Request, res: Response) {
   try {
     const id = Number(req.params.id);
-    const curso = await cursoService.updateCurso(id, req.body);
-    return res.status(200).json({ mensagem: "Curso atualizado com sucesso", data: curso });
+
+    const curso = await cursoService.getCursoById(id);
+    if (!curso) return res.status(404).json({ mensagem: 'Curso não encontrado' });
+
+    const cursoAtualizado = await cursoService.updateCurso(id, req.body);
+    return res.status(200).json({ mensagem: "Curso atualizado com sucesso", data: cursoAtualizado });
   } catch (error) {
     return res.status(400).json({ mensagem: "Erro ao atualizar curso", erro: (error as Error).message });
   }
@@ -45,6 +49,10 @@ export async function update(req: Request, res: Response) {
 export async function remove(req: Request, res: Response) {
   try {
     const id = Number(req.params.id);
+
+    const curso = await cursoService.getCursoById(id);
+    if (!curso) return res.status(404).json({ mensagem: 'Curso não encontrado' });
+    
     await cursoService.deleteCurso(id);
     return res.status(204).json({ mensagem: "Curso deletado com sucesso" });
   } catch (error) {

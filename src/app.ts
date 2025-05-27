@@ -4,6 +4,7 @@ import professorRoutes from './modules/professor/professor.routes';
 import materiaRoutes from './modules/materia/materia.routes';
 import usuarioRoutes from './modules/usuario/usuario.routes';
 import authRoutes from './modules/auth/auth.routes';
+import enumRoutes from './modules/enums/enum.routes';
 
 import cors from 'cors';
 
@@ -20,6 +21,7 @@ app.use('/professores', professorRoutes);
 app.use('/materias', materiaRoutes);
 app.use('/usuarios', usuarioRoutes);
 app.use('/auth', authRoutes);
+app.use('/enums', enumRoutes);
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 

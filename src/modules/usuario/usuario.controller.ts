@@ -35,8 +35,12 @@ export async function getById(req: Request, res: Response) {
 export async function update(req: Request, res: Response) {
   try {
     const id = Number(req.params.id);
-    const usuario = await usuarioService.updateUsuario(id, req.body);
-    return res.status(200).json({  mensagem: "Usuário atualizado com sucesso", data: usuario });
+
+    const usuario = await usuarioService.getUsuarioById(id);
+    if (!usuario) return res.status(404).json({ mensagem: 'Usuário não encontrado' });
+
+    const usuarioAtualizado = await usuarioService.updateUsuario(id, req.body);
+    return res.status(200).json({  mensagem: "Usuário atualizado com sucesso", data: usuarioAtualizado });
   } catch (error) {
     return res.status(400).json({ mensagem: "Erro ao atualizar usuário", erro: (error as Error).message });
   }
@@ -45,6 +49,10 @@ export async function update(req: Request, res: Response) {
 export async function remove(req: Request, res: Response) {
   try {
     const id = Number(req.params.id);
+
+    const usuario = await usuarioService.getUsuarioById(id);
+    if (!usuario) return res.status(404).json({ mensagem: 'Usuário não encontrado' });
+
     await usuarioService.deleteUsuario(id);
     return res.status(204).json({ mensagem: "Usuário deletado com sucesso" });
   } catch (error) {
