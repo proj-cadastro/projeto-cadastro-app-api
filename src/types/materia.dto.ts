@@ -1,7 +1,11 @@
 export interface CreateMateriaDto {
   nome: string;
   cargaHoraria: number;
-  professorId: number;
+  professorId?: number;
+
+  cursos: {
+    cursoId: number;
+  }[];
 }
 
 export interface UpdateMateriaDto extends Partial<CreateMateriaDto> {}

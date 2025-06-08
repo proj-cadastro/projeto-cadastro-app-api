@@ -6,6 +6,6 @@ export async function login(req: Request, res: Response) {
     const { token, userId, userName } = await loginUsuario(req.body);
     return res.json({ token, userId, userName });
   } catch (error) {
-    return res.status(400).json({ mensagem: "Erro ao fazer login", erro: (error as Error).message });
+    return res.status(400).json({ sucesso: false, mensagem: "Erro ao fazer login", erro: (error as Error).message });
   }
 }

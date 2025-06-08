@@ -10,12 +10,11 @@ export const createCursoSchema = z.object({
   sigla: z.string()
     .min(1, 'Sigla deve ter no mínimo 1 caractere')
     .max(4, 'Sigla deve ter no máximo 4 caracteres')
-    .regex(/^[A-Za-z]+$/, 'Sigla deve conter apenas letras')
-    .optional(),
+    .regex(/^[A-Za-z]+$/, 'Sigla deve conter apenas letras'),
 
   modelo: z.enum(['PRESENCIAL', 'HIBRIDO', 'EAD'], {
     errorMap: () => ({ message: 'Modelo inválido' })
-  }).optional(),
+  }),
 
   coordenadorId: z.number()
     .int('CoordenadorId deve ser um número inteiro')
