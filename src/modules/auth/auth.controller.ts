@@ -8,6 +8,7 @@ export async function login(req: Request, res: Response) {
     const { token, userId, userName } = await loginUsuario(req.body);
     return res.json({ token, userId, userName });
   } catch (error) {
+
     return res.status(400).json({ mensagem: `Erro ao fazer login: ${(error as Error).message}` });
   }
 }
@@ -39,5 +40,8 @@ export async function verificaCodigoRecuperacao(req: Request, res: Response) {
     return res.status(200).json({ mensagem: `Código verificado com sucesso!` })
   } catch (error) {
     return res.status(400).json({ mensagem: `${(error as Error).message}` })
+
+    return res.status(400).json({ sucesso: false, mensagem: "Erro ao fazer login", erro: (error as Error).message });
+
   }
 }

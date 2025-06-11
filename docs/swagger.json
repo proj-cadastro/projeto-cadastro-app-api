@@ -128,6 +128,82 @@
         ]
       }
     },
+    "/professores/{id}/transferir-coordenacao": {
+      "put": {
+        "summary": "Transfere a coordenação dos cursos de um professor para outro",
+        "tags": ["Professores"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer" },
+            "description": "ID do professor coordenador atual"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "novoCoordenadorId": {
+                    "type": "integer",
+                    "description": "ID do novo coordenador"
+                  }
+                },
+                "required": ["novoCoordenadorId"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Coordenação transferida com sucesso"
+          },
+          "404": {
+            "description": "Professor não encontrado ou não é coordenador de nenhum curso"
+          },
+          "400": {
+            "description": "Erro ao transferir coordenação"
+          }
+        }
+      }
+    },
+    "/professores/{id}/tem-curso-coordenado": {
+      "get": {
+        "summary": "Verifica se o professor é coordenador de algum curso",
+        "tags": ["Professores"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer" },
+            "description": "ID do professor"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Retorna se o professor é coordenador",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "isCoordenador": { "type": "boolean" }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Erro ao verificar coordenação"
+          }
+        }
+      }
+    },
     "/auth/login": {
       "post": {
         "summary": "Realiza login e gera um token JWT",
@@ -276,6 +352,40 @@
         "tags": [
           "Cursos"
         ]
+      }
+    },
+    "/cursos/{id}/tem-materias-exclusivas": {
+      "get": {
+        "summary": "Verifica se o curso possui matérias exclusivas (matérias que só existem nesse curso)",
+        "tags": ["Cursos"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer" },
+            "description": "ID do curso"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Retorna se o curso possui matérias exclusivas",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "temExclusivas": { "type": "boolean" },
+                    "quantidade": { "type": "integer" }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Erro ao verificar matérias exclusivas"
+          }
+        }
       }
     },
     "/materias": {
