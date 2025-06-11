@@ -48,6 +48,14 @@ export async function getById(req: Request, res: Response) {
 export async function update(req: Request, res: Response) {
   try {
     const id = Number(req.params.id);
+
+
+    const curso = await cursoService.getCursoById(id);
+    if (!curso) return res.status(404).json({ mensagem: 'Curso não encontrado' });
+
+    const cursoAtualizado = await cursoService.updateCurso(id, req.body);
+    return res.status(200).json({ mensagem: "Curso atualizado com sucesso", data: cursoAtualizado });
+
     const coordenadorId = req.body.coordenadorId;
 
     const existe = await professorService.isProfessorExists(coordenadorId);
@@ -59,6 +67,7 @@ export async function update(req: Request, res: Response) {
 
     const curso = await cursoService.updateCurso(id, req.body);
     return res.status(200).json({ sucesso: true, mensagem: "Curso atualizado com sucesso", data: curso });
+
   } catch (error) {
     return res.status(400).json({ sucesso: false, mensagem: "Erro ao atualizar curso", erro: (error as Error).message });
   }
@@ -69,6 +78,10 @@ export async function remove(req: Request, res: Response) {
     const id = Number(req.params.id);
 
     const curso = await cursoService.getCursoById(id);
+
+    if (!curso) return res.status(404).json({ mensagem: 'Curso não encontrado' });
+    
+
     if (!curso) return res.status(404).json({ sucesso: false, mensagem: "Curso não encontrado" });
 
     const materias = curso.materias?.map((cm: any) => cm.materia) || [];
@@ -79,6 +92,7 @@ export async function remove(req: Request, res: Response) {
         await materiaService.deleteMateria(materia.id);
       }
     }
+
     await cursoService.deleteCurso(id);
     return res.status(204).json({ sucesso: true, mensagem: "Curso deletado com sucesso" });
   } catch (error) {
