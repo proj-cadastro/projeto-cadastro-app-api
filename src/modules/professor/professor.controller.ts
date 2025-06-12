@@ -56,9 +56,6 @@ export async function update(req: Request, res: Response) {
     const professorAtualizado = await professorService.updateProfessor(id, req.body);
     return res.status(200).json({ mensagem: "Professor atualizado com sucesso", data: professorAtualizado });
 
-    const professor = await professorService.updateProfessor(id, req.body);
-    return res.status(200).json({ sucesso: true, mensagem: "Professor atualizado com sucesso", data: professor });
-
   } catch (error) {
     return res.status(400).json({ sucesso: false, mensagem: "Erro ao atualizar professor", erro: (error as Error).message });
   }
