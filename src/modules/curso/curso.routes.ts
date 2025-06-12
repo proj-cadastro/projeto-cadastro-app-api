@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { create, getAll, getById, update, remove } from './curso.controller';
+import { create, getAll, getById, update, remove, hasMateriasExclusivas } from './curso.controller';
 import { validateBody } from '../../middlewares/validate.middleware';
 import { createCursoSchema, updateCursoSchema } from '../../schemas/curso.schema';
 import { authenticateToken } from '../../middlewares/auth.middleware';
@@ -24,6 +24,10 @@ router.put('/:id', (req, res) => {
 
 router.delete('/:id', (req, res) => {
     authenticateToken(req, res, () => { remove(req, res) });
+});
+
+router.get('/:id/tem-materias-exclusivas', (req, res) => {
+  authenticateToken(req, res, () => { hasMateriasExclusivas(req, res) });
 });
 
 export default router;

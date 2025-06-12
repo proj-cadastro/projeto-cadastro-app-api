@@ -44,3 +44,13 @@ export async function updateProfessor(id: number, data: Partial<CreateProfessorD
 export async function deleteProfessor(id: number) {
   return await prisma.professor.delete({ where: { id } });
 }
+
+export async function isProfessorExists(id: number): Promise<boolean> {
+  const professor = await prisma.professor.findUnique({ where: { id } });
+  return !!professor;
+}
+
+export async function isProfessorCoordenador(id: number): Promise<boolean> {
+  const curso = await prisma.curso.findFirst({ where: { coordenadorId: id } });
+  return !!curso;
+}

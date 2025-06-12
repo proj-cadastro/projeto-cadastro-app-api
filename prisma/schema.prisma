@@ -85,8 +85,8 @@ model Materia {
   nome         String
   cargaHoraria Int
 
-  professorId  Int 
-  professor    Professor @relation(fields: [professorId], references: [id])
+  professorId  Int?
+  professor    Professor? @relation(fields: [professorId], references: [id])
 
   cursos       CursoMateria[]
 }
@@ -107,11 +107,8 @@ model Curso {
 model CursoMateria {
   cursoId   Int
   materiaId Int
-  semestre  Int
-  turno     Turno
-  tipo      TipoMateria
 
-  curso     Curso   @relation(fields: [cursoId], references: [id])
+  curso     Curso   @relation(fields: [cursoId], references: [id], onDelete: Cascade)
   materia   Materia @relation(fields: [materiaId], references: [id])
 
   @@id([cursoId, materiaId])
