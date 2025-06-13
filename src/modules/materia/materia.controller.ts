@@ -56,13 +56,6 @@ export async function update(req: Request, res: Response) {
   try {
     const id = Number(req.params.id);
 
-
-    const materia = await materiaService.getMateriaById(id);
-    if (!materia) return res.status(404).json({ mensagem: 'Matéria não encontrada' });
-
-    const materiaAtualizada = await materiaService.updateMateria(id, req.body);
-    return res.status(200).json({ mensagem: "Matéria atualizada com sucesso", data: materiaAtualizada });
-
     const { cursos } = req.body;
 
     const existingMateria = await materiaService.getMateriaById(id);

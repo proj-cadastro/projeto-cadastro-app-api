@@ -43,8 +43,7 @@ export async function update(req: Request, res: Response) {
     const usuarioAtualizado = await usuarioService.updateUsuario(id, req.body);
     return res.status(200).json({  mensagem: "Usuário atualizado com sucesso", data: usuarioAtualizado });
 
-    const usuario = await usuarioService.updateUsuario(id, req.body);
-    return res.status(200).json({  sucesso: true, mensagem: "Usuário atualizado com sucesso", data: usuario });
+
 
   } catch (error) {
     return res.status(400).json({ sucesso: false, mensagem: "Erro ao atualizar usuário", erro: (error as Error).message });
