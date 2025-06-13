@@ -1,6 +1,7 @@
 import prisma from '../../prisma/client';
 import { CreateProfessorDto } from '../../types/professor.dto';
 
+
 const professorInclude = {
   materias: {
     include: {
@@ -11,11 +12,15 @@ const professorInclude = {
       }
     }
   },
-  cursoCoordenado: true 
+  cursoCoordenado: true
 };
 
 export async function createProfessor(data: CreateProfessorDto) {
   return await prisma.professor.create({ data });
+}
+
+export async function createManyProfessors(data: CreateProfessorDto[]) {
+  return await prisma.professor.createMany({ data })
 }
 
 export async function getAllProfessores() {

@@ -49,13 +49,6 @@ export async function update(req: Request, res: Response) {
   try {
     const id = Number(req.params.id);
 
-
-    const curso = await cursoService.getCursoById(id);
-    if (!curso) return res.status(404).json({ mensagem: 'Curso não encontrado' });
-
-    const cursoAtualizado = await cursoService.updateCurso(id, req.body);
-    return res.status(200).json({ mensagem: "Curso atualizado com sucesso", data: cursoAtualizado });
-
     const coordenadorId = req.body.coordenadorId;
 
     const existe = await professorService.isProfessorExists(coordenadorId);
