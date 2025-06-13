@@ -13,11 +13,11 @@ router.post('/', (req, res) => {
 });
 
 const upload = multer({ storage: multer.memoryStorage() })
-router.post('/upload/xsl', upload.single('file'), (req, res) => {
+router.post('/upload/planilha-modelo.xlsx', upload.single('file'), (req, res) => {
     authenticateToken(req, res, () => { uploadFile(req, res) })
 })
 
-router.get('/download/xsl', (req, res) => {
+router.get('/download/planilha-modelo.xlsx', (req, res) => {
     authenticateToken(req, res, () => { downloadFile(req, res) })
 })
 
@@ -42,7 +42,7 @@ router.put('/:id/transferir-coordenacao', (req, res) => {
 });
 
 router.get('/:id/tem-curso-coordenado', (req, res) => {
-  authenticateToken(req, res, () => { hasCursoCoordenado(req, res) });
+    authenticateToken(req, res, () => { hasCursoCoordenado(req, res) });
 });
 
 export default router;
