@@ -1,5 +1,7 @@
 import { createManyProfessors } from "../modules/professor/professor.service";
 import { CreateProfessorDto } from "../types/professor.dto";
+import prisma from "../prisma/client";
+
 
 import * as xlsx from 'xlsx';
 
@@ -18,8 +20,9 @@ export const uploadProfessorFile = async (fileBuffer: Buffer) => {
         idUnidade: String(prof.idUnidade)
     }))
 
-    verifyDuplicatedValue(professors, "email")
-    verifyDuplicatedValue(professors, "lattes")
+    verifyDuplicatedValueInExcelFile(professors, "email")
+    verifyDuplicatedValueInExcelFile(professors, "lattes")
+    await verifyDuplicatedValueInDB(professors)
 
     try {
         if (professors.length) await createManyProfessors(professors);
@@ -30,16 +33,49 @@ export const uploadProfessorFile = async (fileBuffer: Buffer) => {
     return { professors };
 };
 
-const verifyDuplicatedValue = (list: any[], key: string): void => {
-    const count: Record<string, number> = {};
+const verifyDuplicatedValueInDB = async (list: any[]) => {
 
-    list.forEach(item => {
-        const value = String(item[key] ?? "");
-        count[value] = (count[value] || 0) + 1;
+    //verifica os campos únicos da tabela
+    const emails = list.map(p => p.email).filter(Boolean)
+    const lattess = list.map(p => p.lattes).filter(Boolean)
 
-        if (count[value] > 1 && value !== "") {
-            throw new Error(`Valor duplicado encontrado no campo: "${key}": ${value}`);
+    const existing = await prisma.professor.findMany({
+        where: {
+            OR: [
+                { email: { in: emails } },
+                { lattes: { in: lattess } }
+            ]
+        },
+        select: {
+            email: true,
+            lattes: true//
         }
-    });
+    })
+
+    if (existing.length) {
+        const duplicated = existing.map(p => p.email || p.lattes).join(", ");
+        throw new Error(`Valores já cadastrados na plataforma: ${duplicated}`)
+    }
+    return false
 };
 
+const verifyDuplicatedValueInExcelFile = (list: any[], key: string) => {
+    const count: Record<string, string[]> = {
+        emails: [],
+        lattes: []
+    };
+
+    list.forEach(item => {
+
+
+        // const value = String(item["email"] ?? "");
+        // count[value] = (count[value] || 0) + 1;
+
+        // if (count[value] > 1 && value !== "") {
+        //     throw new Error(`Valor duplicado encontrado no campo: "${key}": ${value}`);
+
+        // }
+    });
+}
+
+//count = {"email": 1}
