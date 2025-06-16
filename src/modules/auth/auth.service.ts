@@ -26,7 +26,7 @@ export async function geraTokenRecuperacaoSenha(email: string) {
   const code = await generateResetCode()
 
   await sendResetCode(user.email, code)
-  return generateToken({ id: user.id, code }, "10m")
+  return generateToken({ userId: user.id, code }, "10m")
 
 }
 
