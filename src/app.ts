@@ -5,6 +5,7 @@ import materiaRoutes from './modules/materia/materia.routes';
 import usuarioRoutes from './modules/usuario/usuario.routes';
 import authRoutes from './modules/auth/auth.routes';
 import enumRoutes from './modules/enums/enum.routes';
+import unidadeRoutes from './modules/unidade/unidade.routes';
 
 import path from 'path';
 import cors from 'cors';
@@ -24,6 +25,7 @@ app.use('/usuarios', usuarioRoutes);
 app.use('/auth', authRoutes);
 app.use('/enums', enumRoutes);
 app.use('/static', express.static(path.join(__dirname, '..', 'public')))
+app.use('/unidades', unidadeRoutes);
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
