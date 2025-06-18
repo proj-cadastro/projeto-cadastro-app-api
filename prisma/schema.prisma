@@ -65,7 +65,7 @@ enum TipoMateria {
 }
 
 model Unidade {
-  id        Int     @id
+  id        String  @id
   nome      String
   latitude  Float
   longitude Float

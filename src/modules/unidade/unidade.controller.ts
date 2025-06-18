@@ -5,9 +5,8 @@ export const unidadeProximaController = async (req: Request, res: Response) => {
   try {
     const { latitude, longitude } = req.body;
 
-    if (!latitude || !longitude) {
+    if (!latitude || !longitude) 
       return res.status(400).json({ sucesso: false, mensagem: 'Latitude e longitude são obrigatórios.' });
-    }
 
     const unidade = await buscarUnidadeProxima(latitude, longitude);
 

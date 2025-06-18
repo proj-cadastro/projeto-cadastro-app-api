@@ -3,6 +3,9 @@ import { unidadeProximaController } from './unidade.controller';
 
 const router = Router();
 
-router.post('/', (req, res) => {unidadeProximaController} );
+router.post('/', (req, res) => {
+    unidadeProximaController(req, res);
+});
+
 
 export default router;

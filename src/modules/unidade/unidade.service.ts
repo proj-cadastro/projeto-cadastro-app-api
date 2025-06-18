@@ -9,7 +9,7 @@ export async function buscarUnidadeProxima(latitude: number, longitude: number) 
 
   for (const unidade of unidades) {
     const dist = calculateDistanceKm(latitude, longitude, unidade.latitude, unidade.longitude);
-    if (dist <= 3 && dist < menorDistancia) {
+    if (dist <= 2 && dist < menorDistancia) {
       menorDistancia = dist;
       unidadeMaisProxima = unidade;
     }
