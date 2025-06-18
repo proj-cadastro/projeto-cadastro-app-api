@@ -21,7 +21,10 @@ export const createProfessorSchema = z.object({
     .regex(/^PES_(I|II|III)_[A-H]$/, 'Formato de referência inválido'),
 
   lattes: z.string()
-    .url('URL do Lattes inválida'),
+    .regex(
+      /^(https?:\/\/)?lattes\.cnpq\.br\/[A-Za-z0-9]+$/,
+      'URL do Lattes deve ser no formato lattes.cnpq.br/[identificador]'
+    ),
 
   statusAtividade: z.enum(['ATIVO', 'AFASTADO', 'LICENCA', 'NAO_ATIVO'], {
     errorMap: () => ({ message: 'Status de atividade inválido' })

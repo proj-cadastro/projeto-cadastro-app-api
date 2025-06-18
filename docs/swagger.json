@@ -622,8 +622,8 @@
       "security": [ { "bearerAuth": [] } ],
       "tags": [ "Enums" ]
     }
-  },
-  "/enum/statusAtividade": {
+    },
+    "/enum/statusAtividade": {
     "get": {
       "summary": "Obtém os status de atividade disponíveis",
       "responses": {
@@ -633,51 +633,160 @@
       "security": [ { "bearerAuth": [] } ],
       "tags": [ "Enums" ]
     }
-  },
-  "/enum/modeloCurso": {
-    "get": {
-      "summary": "Obtém os modelos de curso disponíveis",
-      "responses": {
-        "200": { "description": "Modelos de Curso encontrados com sucesso" },
-        "400": { "description": "Erro ao buscar Modelos de Curso" }
-      },
-      "security": [ { "bearerAuth": [] } ],
-      "tags": [ "Enums" ]
+    },
+    "/enum/modeloCurso": {
+      "get": {
+        "summary": "Obtém os modelos de curso disponíveis",
+        "responses": {
+          "200": { "description": "Modelos de Curso encontrados com sucesso" },
+          "400": { "description": "Erro ao buscar Modelos de Curso" }
+        },
+        "security": [ { "bearerAuth": [] } ],
+        "tags": [ "Enums" ]
+      }
+    },
+    "/enum/referencia": {
+      "get": {
+        "summary": "Obtém as referências disponíveis",
+        "responses": {
+          "200": { "description": "Referências encontradas com sucesso" },
+          "400": { "description": "Erro ao buscar Referências" }
+        },
+        "security": [ { "bearerAuth": [] } ],
+        "tags": [ "Enums" ]
+      }
+    },
+    "/enum/turno": {
+      "get": {
+        "summary": "Obtém os turnos disponíveis",
+        "responses": {
+          "200": { "description": "Turnos encontrados com sucesso" },
+          "400": { "description": "Erro ao buscar Turnos" }
+        },
+        "security": [ { "bearerAuth": [] } ],
+        "tags": [ "Enums" ]
+      }
+    },
+    "/enum/tipoMateria": {
+      "get": {
+        "summary": "Obtém os tipos de matéria disponíveis",
+        "responses": {
+          "200": { "description": "Tipos de Matéria encontrados com sucesso" },
+          "400": { "description": "Erro ao buscar Tipos de Matéria" }
+        },
+        "security": [ { "bearerAuth": [] } ],
+        "tags": [ "Enums" ]
+      }
+    },
+    "/professores/upload/planilha-modelo.xlsx": {
+      "post": {
+        "summary": "Faz upload de uma planilha de professores",
+        "tags": ["Professores"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "file": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Professores cadastrados com sucesso" },
+          "400": { "description": "Erro no upload" }
+        }
+      }
+    },
+    "/professores/download/planilha-modelo.xlsx": {
+      "get": {
+        "summary": "Faz download do modelo de planilha de professores",
+        "tags": ["Professores"],
+        "responses": {
+          "200": { "description": "Arquivo XLSX retornado" }
+        }
+      }
+    },
+    "/auth/esqueceu-senha": {
+      "post": {
+        "summary": "Solicita recuperação de senha (envia código por e-mail)",
+        "tags": ["Autenticação"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": { "type": "string" }
+                },
+                "required": ["email"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Token de recuperação enviado" },
+          "400": { "description": "Erro ao solicitar recuperação" }
+        }
+      }
+    },
+    "/auth/verifica-reset-code": {
+      "post": {
+        "summary": "Verifica o código de recuperação de senha",
+        "tags": ["Autenticação"],
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "code": { "type": "string" }
+                },
+                "required": ["code"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Código verificado com sucesso" },
+          "400": { "description": "Código inválido ou expirado" }
+        }
+      }
+    },
+    "/unidades": {
+      "post": {
+        "summary": "Busca unidade mais próxima a partir de latitude e longitude",
+        "tags": ["Unidades"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "latitude": { "type": "number" },
+                  "longitude": { "type": "number" }
+                },
+                "required": ["latitude", "longitude"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Unidade mais próxima retornada" },
+          "400": { "description": "Latitude e longitude obrigatórios" }
+        }
+      }
     }
-  },
-  "/enum/referencia": {
-    "get": {
-      "summary": "Obtém as referências disponíveis",
-      "responses": {
-        "200": { "description": "Referências encontradas com sucesso" },
-        "400": { "description": "Erro ao buscar Referências" }
-      },
-      "security": [ { "bearerAuth": [] } ],
-      "tags": [ "Enums" ]
-    }
-  },
-  "/enum/turno": {
-    "get": {
-      "summary": "Obtém os turnos disponíveis",
-      "responses": {
-        "200": { "description": "Turnos encontrados com sucesso" },
-        "400": { "description": "Erro ao buscar Turnos" }
-      },
-      "security": [ { "bearerAuth": [] } ],
-      "tags": [ "Enums" ]
-    }
-  },
-  "/enum/tipoMateria": {
-    "get": {
-      "summary": "Obtém os tipos de matéria disponíveis",
-      "responses": {
-        "200": { "description": "Tipos de Matéria encontrados com sucesso" },
-        "400": { "description": "Erro ao buscar Tipos de Matéria" }
-      },
-      "security": [ { "bearerAuth": [] } ],
-      "tags": [ "Enums" ]
-    }
-  }
   },
   "components": {
     "schemas": {
