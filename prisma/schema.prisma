@@ -64,6 +64,14 @@ enum TipoMateria {
   OPTATIVA
 }
 
+model Unidade {
+  id        Int     @id
+  nome      String
+  latitude  Float
+  longitude Float
+}
+
+
 model Professor {
   id                 Int       @id @default(autoincrement())
   nome               String

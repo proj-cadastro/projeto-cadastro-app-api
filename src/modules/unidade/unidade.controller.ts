@@ -6,14 +6,14 @@ export const unidadeProximaController = async (req: Request, res: Response) => {
     const { latitude, longitude } = req.body;
 
     if (!latitude || !longitude) {
-      return res.status(400).json({ error: 'Latitude e longitude são obrigatórios.' });
+      return res.status(400).json({ sucesso: false, mensagem: 'Latitude e longitude são obrigatórios.' });
     }
 
     const unidade = await buscarUnidadeProxima(latitude, longitude);
 
-    return res.status(200).json(unidade ?? null); // Pode ser null se não encontrar
+    return res.status(200).json({ sucesso: true, dados: unidade ?? null });
   } catch (error) {
     console.error('Erro ao buscar unidade próxima:', error);
-    return res.status(500).json({ error: 'Erro interno do servidor.' });
+    return res.status(500).json({ sucesso: false, mensagem: 'Erro interno do servidor.' });
   }
 };
