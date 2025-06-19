@@ -10,7 +10,6 @@ export async function create(req: Request, res: Response) {
     const coordenadorId = cursoData.coordenadorId;
 
     const existe = await professorService.isProfessorExists(coordenadorId);
-    console.log("Professor existe:", existe);
 
     if (!existe)
       return res
