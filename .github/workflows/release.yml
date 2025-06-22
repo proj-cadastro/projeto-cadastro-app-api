@@ -1,0 +1,65 @@
+name: Build e Push Docker Image - API
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build_and_push:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v3
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: Configurar Git
+        run: |
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "actions@github.com"
+
+      - name: Instalar dependências
+        run: npm install
+
+      - name: Gerar Prisma Client
+        run: npx prisma generate
+
+      - name: Incrementar versão e atualizar package.json
+        run: npm version patch --no-git-tag-version
+
+      - name: Commitar alterações de versão
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          if [ -n "$(git status --porcelain)" ]; then
+            git add package.json
+            git commit -m "chore: bump version to $(node -p \"require('./package.json').version\")"
+            git tag v$(node -p "require('./package.json').version")
+            git push
+            git push --tags
+          else
+            echo "Nenhuma alteração de versão para commitar."
+          fi
+
+      - name: Login no Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build da imagem Docker
+        run: |
+          VERSION=$(node -p "require('./package.json').version")
+          docker build -t projetointegradorfatec/projeto-cadastro-app-api:latest .
+          docker tag projetointegradorfatec/projeto-cadastro-app-api:latest projetointegradorfatec/projeto-cadastro-app-api:$VERSION
+
+      - name: Push da imagem para o Docker Hub
+        run: |
+          VERSION=$(node -p "require('./package.json').version")
+          docker push projetointegradorfatec/projeto-cadastro-app-api:$VERSION
+          docker push projetointegradorfatec/projeto-cadastro-app-api:latest
