@@ -1,4 +1,4 @@
-name: Build e Push Docker Image - API
+name: Build e Deploy Docker da API
 
 on:
   push:
@@ -8,7 +8,6 @@ on:
 jobs:
   build_and_push:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout do código
         uses: actions/checkout@v3
@@ -18,30 +17,29 @@ jobs:
         with:
           node-version: 18
 
-      - name: Configurar Git
-        run: |
-          git config --global user.name "GitHub Actions"
-          git config --global user.email "actions@github.com"
+      - name: Cache do npm
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
 
       - name: Instalar dependências
-        run: npm install
+        run: npm ci
 
-      - name: Gerar Prisma Client
-        run: npx prisma generate
-
-      - name: Incrementar versão e atualizar package.json
+      - name: Incrementar versão no package.json
         run: npm version patch --no-git-tag-version
 
-      - name: Commitar alterações de versão
+      - name: Commitar atualização de versão
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           if [ -n "$(git status --porcelain)" ]; then
+            VERSION=$(node -p "require('./package.json').version")
             git add package.json
-            git commit -m "chore: bump version to $(node -p \"require('./package.json').version\")"
-            git tag v$(node -p "require('./package.json').version")
+            git commit -m "chore: release da versão $VERSION"
             git push
-            git push --tags
           else
             echo "Nenhuma alteração de versão para commitar."
           fi
@@ -52,14 +50,18 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Build da imagem Docker
-        run: |
-          VERSION=$(node -p "require('./package.json').version")
-          docker build -t projetointegradorfatec/projeto-cadastro-app-api:latest .
-          docker tag projetointegradorfatec/projeto-cadastro-app-api:latest projetointegradorfatec/projeto-cadastro-app-api:$VERSION
+      - name: Extraindo versão do package.json
+        id: version
+        run: echo "VERSION=$(node -p "require('./package.json').version")" >> $GITHUB_ENV
 
-      - name: Push da imagem para o Docker Hub
-        run: |
-          VERSION=$(node -p "require('./package.json').version")
-          docker push projetointegradorfatec/projeto-cadastro-app-api:$VERSION
-          docker push projetointegradorfatec/projeto-cadastro-app-api:latest
+      - name: Build e push da imagem Docker
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: |
+            projetointegradorfatec/projeto-cadastro-app-api:latest
+            projetointegradorfatec/projeto-cadastro-app-api:${{ env.VERSION }}
+
+      - name: Limpar cache do Docker
+        run: docker system prune -af || true
