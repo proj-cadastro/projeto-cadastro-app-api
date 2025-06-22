@@ -31,6 +31,11 @@ jobs:
       - name: Incrementar versão no package.json
         run: npm version patch --no-git-tag-version
 
+      - name: Configurar identidade do Git
+        run: |
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git config --global user.name "github-actions[bot]"
+
       - name: Commitar atualização de versão
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -64,4 +69,4 @@ jobs:
             projetointegradorfatec/projeto-cadastro-app-api:${{ env.VERSION }}
 
       - name: Limpar cache do Docker
-        run: docker system prune -af || true
+        run: docker system prune -
