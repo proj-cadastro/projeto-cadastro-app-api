@@ -38,11 +38,11 @@ jobs:
 
       - name: Configurar remote com token
         run: |
-          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
+          git remote set-url origin https://x-access-token:${{ secrets.GH_TOKEN }}@github.com/${{ github.repository }}
 
       - name: Commitar atualização de versão
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
         run: |
           if [ -n "$(git status --porcelain)" ]; then
             VERSION=$(node -p "require('./package.json').version")
