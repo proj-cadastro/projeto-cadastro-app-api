@@ -36,6 +36,10 @@ jobs:
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git config --global user.name "github-actions[bot]"
 
+      - name: Configurar remote com token
+        run: |
+          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
+
       - name: Commitar atualização de versão
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -69,4 +73,4 @@ jobs:
             projetointegradorfatec/projeto-cadastro-app-api:${{ env.VERSION }}
 
       - name: Limpar cache do Docker
-        run: docker system prune -
+        run: docker system prune -af || true
