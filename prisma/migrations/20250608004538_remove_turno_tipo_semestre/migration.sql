@@ -7,6 +7,6 @@
 
 */
 -- AlterTable
-ALTER TABLE `cursomateria` DROP COLUMN `semestre`,
+ALTER TABLE `CursoMateria` DROP COLUMN `semestre`,
     DROP COLUMN `tipo`,
     DROP COLUMN `turno`;
