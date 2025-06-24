@@ -2,7 +2,7 @@
 ALTER TABLE `Materia` DROP FOREIGN KEY `Materia_professorId_fkey`;
 
 -- DropIndex
-DROP INDEX `Materia_professorId_fkey` ON `materia`;
+DROP INDEX `Materia_professorId_fkey` ON `Materia`;
 
 -- AlterTable
 ALTER TABLE `Materia` MODIFY `professorId` INTEGER NULL;
