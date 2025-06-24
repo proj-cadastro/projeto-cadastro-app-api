@@ -29,13 +29,10 @@ export async function getAllProfessores(filters?: {
 }) {
   const where: any = {};
 
-  console.log("Received filters:", filters);
-
   if (filters?.nome) {
     where.nome = {
       contains: filters.nome.trim(),
     };
-    console.log("Filter by name:", filters.nome.trim());
   }
 
   if (filters?.cursos && filters.cursos.length > 0) {
@@ -64,11 +61,6 @@ export async function getAllProfessores(filters?: {
     where,
     include: professorInclude,
   });
-
-  console.log("Filters:", filters);
-  console.log("Where clause:", where);
-  console.log("Professors:", professors);
-
   return professors;
 }
 
