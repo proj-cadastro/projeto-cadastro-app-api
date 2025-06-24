@@ -5,6 +5,6 @@
 
 */
 -- AlterTable
-ALTER TABLE `unidade` DROP PRIMARY KEY,
+ALTER TABLE `Unidade` DROP PRIMARY KEY,
     MODIFY `id` VARCHAR(191) NOT NULL,
     ADD PRIMARY KEY (`id`);
