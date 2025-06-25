@@ -11,6 +11,10 @@
       "description": "Servidor de Desenvolvimento Local"
     },
     {
+      "url": "http://184.73.149.105:3000",
+      "description": "Servidor EC2 na AWS"
+    },
+    {
       "url": "https://api.exemplo.com",
       "description": "Servidor de Produ\u00e7\u00e3o (em breve, edite esta URL conforme necess\u00e1rio)"
     }
