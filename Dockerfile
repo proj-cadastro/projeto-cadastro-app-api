@@ -33,4 +33,4 @@ COPY --from=build /app/docs ./docs
 RUN npm install --production
 
 # Garante que as migrations sejam aplicadas toda vez que o container subir
-CMD npx prisma migrate deploy && npm run start:prod
+CMD ["sh", "-c", "npx prisma migrate deploy && npm run start:prod"]
