@@ -21,12 +21,10 @@ export async function create(req: Request, res: Response) {
     );
 
     if (jaCoordenador)
-      return res
-        .status(400)
-        .json({
-          sucesso: false,
-          mensagem: "Professor já é coordenador de outro curso",
-        });
+      return res.status(400).json({
+        sucesso: false,
+        mensagem: "Professor já é coordenador de outro curso",
+      });
 
     const curso = await cursoService.createCurso(cursoData);
 
@@ -39,21 +37,17 @@ export async function create(req: Request, res: Response) {
       }
     }
 
-    return res
-      .status(201)
-      .json({
-        sucesso: true,
-        mensagem: "Curso e matérias criados com sucesso",
-        data: curso,
-      });
+    return res.status(201).json({
+      sucesso: true,
+      mensagem: "Curso e matérias criados com sucesso",
+      data: curso,
+    });
   } catch (error) {
-    return res
-      .status(400)
-      .json({
-        sucesso: false,
-        mensagem: "Erro ao criar curso",
-        erro: (error as Error).message,
-      });
+    return res.status(400).json({
+      sucesso: false,
+      mensagem: "Erro ao criar curso",
+      erro: (error as Error).message,
+    });
   }
 }
 
@@ -102,7 +96,8 @@ export async function update(req: Request, res: Response) {
   try {
     const id = Number(req.params.id);
 
-    const coordenadorId = req.body.coordenadorId;
+    const { materias, ...cursoData } = req.body;
+    const coordenadorId = cursoData.coordenadorId;
 
     const existe = await professorService.isProfessorExists(coordenadorId);
     if (!existe)
@@ -116,7 +111,28 @@ export async function update(req: Request, res: Response) {
         .status(404)
         .json({ sucesso: false, mensagem: "Curso não encontrado" });
 
-    const curso = await cursoService.updateCurso(id, req.body);
+    await cursoService.updateCurso(id, cursoData);
+
+    if (materias && Array.isArray(materias)) {
+      const existingMaterias =
+        cursoBuscado.materias?.map((cm: any) => cm.materia) || [];
+
+      for (const materia of existingMaterias) {
+        const unica = await materiaService.isMateriaUnicaEmCurso(materia.id);
+        if (unica) {
+          await materiaService.deleteMateria(materia.id);
+        }
+      }
+
+      for (const materia of materias) {
+        await materiaService.createMateria({
+          ...materia,
+          cursos: [{ cursoId: id }],
+        });
+      }
+    }
+
+    const curso = await cursoService.getCursoById(id);
     return res.status(200).json({
       sucesso: true,
       mensagem: "Curso atualizado com sucesso",
