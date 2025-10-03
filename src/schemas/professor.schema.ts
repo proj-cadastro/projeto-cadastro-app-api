@@ -2,6 +2,7 @@ import { z } from 'zod';
 
 export const createProfessorSchema = z.object({
   nome: z.string()
+    .min(3, 'Nome deve ter no mínimo 3 caracteres')
     .max(50, 'Nome deve ter no máximo 50 caracteres')
     .regex(/^[A-Za-zÀ-ú\s]+$/, 'Nome deve conter apenas letras'),
 
