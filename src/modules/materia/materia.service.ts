@@ -1,13 +1,13 @@
-import prisma from '../../prisma/client';
-import { CreateMateriaDto } from '../../types/materia.dto';
+import prisma from "../../prisma/client";
+import { CreateMateriaDto } from "../../types/materia.dto";
 
 const materiaInclude = {
   professor: true,
   cursos: {
     include: {
-      curso: true
-    }
-  }
+      curso: true,
+    },
+  },
 };
 
 export async function createMateria(data: CreateMateriaDto) {
@@ -17,28 +17,30 @@ export async function createMateria(data: CreateMateriaDto) {
     data: {
       ...materiaData,
       cursos: {
-        create: cursos.map(c => ({ cursoId: c.cursoId }))
-      }
+        create: cursos.map((c) => ({ cursoId: String(c.cursoId) })),
+      },
     },
     include: materiaInclude,
   });
 }
 
-
 export async function getAllMaterias() {
   return await prisma.materia.findMany({
-    include: materiaInclude
+    include: materiaInclude,
   });
 }
 
-export async function getMateriaById(id: number) {
+export async function getMateriaById(id: string) {
   return await prisma.materia.findUnique({
     where: { id },
-    include: materiaInclude
+    include: materiaInclude,
   });
 }
 
-export async function updateMateria(id: number, data: Partial<CreateMateriaDto>) {
+export async function updateMateria(
+  id: string,
+  data: Partial<CreateMateriaDto>
+) {
   const { cursos, ...materiaData } = data;
 
   await prisma.materia.update({
@@ -47,32 +49,34 @@ export async function updateMateria(id: number, data: Partial<CreateMateriaDto>)
   });
 
   if (cursos) {
-    await prisma.cursoMateria.deleteMany({where: { materiaId: id }});
+    await prisma.cursoMateria.deleteMany({ where: { materiaId: id } });
 
     await prisma.cursoMateria.createMany({
-      data: cursos.map(c => ({ cursoId: c.cursoId, materiaId: id })),
-      skipDuplicates: true
+      data: cursos.map((c) => ({ cursoId: String(c.cursoId), materiaId: id })),
+      skipDuplicates: true,
     });
   }
 
   return await getMateriaById(id);
 }
 
-export async function deleteMateria(id: number) {
+export async function deleteMateria(id: string) {
   await prisma.cursoMateria.deleteMany({ where: { materiaId: id } });
   return await prisma.materia.delete({ where: { id } });
 }
 
-export async function checkCoursesId(cursoIds: number[]): Promise<boolean> {
+export async function checkCoursesId(cursoIds: string[]): Promise<boolean> {
   const cursos = await prisma.curso.findMany({
     where: { id: { in: cursoIds } },
-    select: { id: true }
+    select: { id: true },
   });
 
   return cursos.length === cursoIds.length;
 }
 
-export async function isMateriaUnicaEmCurso(materiaId: number): Promise<boolean> {
+export async function isMateriaUnicaEmCurso(
+  materiaId: string
+): Promise<boolean> {
   const count = await prisma.cursoMateria.count({ where: { materiaId } });
   return count === 1;
 }

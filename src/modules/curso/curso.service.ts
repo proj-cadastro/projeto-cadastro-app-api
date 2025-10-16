@@ -1,17 +1,17 @@
-import prisma from '../../prisma/client';
-import { CreateCursoDto } from '../../types/curso.dto';
+import prisma from "../../prisma/client";
+import { CreateCursoDto } from "../../types/curso.dto";
 
 const cursoInclude = {
   materias: {
     include: {
       materia: {
         include: {
-          professor: true
-        }
-      }
-    }
+          professor: true,
+        },
+      },
+    },
   },
-  coordenador: true
+  coordenador: true,
 };
 
 export async function createCurso(data: CreateCursoDto) {
@@ -20,33 +20,33 @@ export async function createCurso(data: CreateCursoDto) {
 
 export async function getAllCursos() {
   return await prisma.curso.findMany({
-    include: cursoInclude
+    include: cursoInclude,
   });
 }
 
-export async function getCursoById(id: number) {
+export async function getCursoById(id: string) {
   return await prisma.curso.findUnique({
     where: { id },
-    include: cursoInclude
+    include: cursoInclude,
   });
 }
 
-export async function updateCurso(id: number, data: Partial<CreateCursoDto>) {
+export async function updateCurso(id: string, data: Partial<CreateCursoDto>) {
   await prisma.curso.update({ where: { id }, data });
   return await getCursoById(id);
 }
 
-export async function deleteCurso(id: number) {
+export async function deleteCurso(id: string) {
   return await prisma.curso.delete({ where: { id } });
 }
 
-export async function isCursoExists(id: number): Promise<boolean> {
+export async function isCursoExists(id: string): Promise<boolean> {
   const curso = await prisma.curso.findUnique({ where: { id } });
   return !!curso;
 }
 
 export async function areCursosExist(cursos: any[]): Promise<boolean> {
-  const ids = cursos.every(c => typeof c === 'number')
+  const ids = cursos.every((c) => typeof c === "string")
     ? cursos
     : cursos.map((c: any) => c.cursoId);
 
@@ -54,6 +54,6 @@ export async function areCursosExist(cursos: any[]): Promise<boolean> {
   return count === ids.length;
 }
 
-export async function getCursosByCoordenadorId(coordenadorId: number) {
+export async function getCursosByCoordenadorId(coordenadorId: string) {
   return await prisma.curso.findMany({ where: { coordenadorId } });
 }

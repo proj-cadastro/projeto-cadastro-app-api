@@ -7,7 +7,7 @@ export async function create(req: Request, res: Response) {
   try {
     const { materias, ...cursoData } = req.body;
 
-    const coordenadorId = cursoData.coordenadorId;
+    const coordenadorId = cursoData.coordenadorId as string;
 
     const existe = await professorService.isProfessorExists(coordenadorId);
 
@@ -76,7 +76,7 @@ export async function getAll(req: Request, res: Response) {
 
 export async function getById(req: Request, res: Response) {
   try {
-    const id = Number(req.params.id);
+    const id = String(req.params.id);
     const curso = await cursoService.getCursoById(id);
     if (!curso)
       return res
@@ -94,7 +94,7 @@ export async function getById(req: Request, res: Response) {
 
 export async function update(req: Request, res: Response) {
   try {
-    const id = Number(req.params.id);
+    const id = String(req.params.id);
 
     const { materias, ...cursoData } = req.body;
     const coordenadorId = cursoData.coordenadorId;
@@ -149,7 +149,7 @@ export async function update(req: Request, res: Response) {
 
 export async function remove(req: Request, res: Response) {
   try {
-    const id = Number(req.params.id);
+    const id = String(req.params.id);
 
     const curso = await cursoService.getCursoById(id);
 
@@ -185,7 +185,7 @@ export async function remove(req: Request, res: Response) {
 
 export async function hasMateriasExclusivas(req: Request, res: Response) {
   try {
-    const id = Number(req.params.id);
+    const id = String(req.params.id);
     const curso = await cursoService.getCursoById(id);
     if (!curso)
       return res

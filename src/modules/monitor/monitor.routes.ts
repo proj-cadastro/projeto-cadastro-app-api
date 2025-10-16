@@ -1,18 +1,17 @@
 import { Router } from "express";
 import {
+  create,
   getAll,
   getById,
-  create,
   update,
   remove,
-  toggleStatus,
-  createMonitorUser,
-} from "./usuario.controller";
+  getByProfessorId,
+} from "./monitor.controller";
 import { validateBody } from "../../middlewares/validate.middleware";
 import {
-  createUsuarioSchema,
-  updateUsuarioSchema,
-} from "../../schemas/usuario.schema";
+  createMonitorSchema,
+  updateMonitorSchema,
+} from "../../schemas/monitor.schema";
 import {
   authenticateToken,
   requireSuperAdmin,
@@ -21,25 +20,18 @@ import {
 
 const router = Router();
 
-// Criação de usuário público (sem autenticação) - será ADMIN por padrão
+// Apenas super admin pode criar monitores
 router.post("/", (req, res) => {
-  validateBody(createUsuarioSchema)(req, res, () => {
-    create(req, res);
-  });
-});
-
-// Apenas super admin pode criar usuário monitor
-router.post("/monitor", (req, res) => {
   authenticateToken(req, res, () => {
     requireSuperAdmin(req, res, () => {
-      validateBody(createUsuarioSchema)(req, res, () => {
-        createMonitorUser(req, res);
+      validateBody(createMonitorSchema)(req, res, () => {
+        create(req, res);
       });
     });
   });
 });
 
-// Admin e super admin podem listar usuários
+// Admin e super admin podem listar monitores
 router.get("/", (req, res) => {
   authenticateToken(req, res, () => {
     requireAdminOrSuperAdmin(req, res, () => {
@@ -48,7 +40,7 @@ router.get("/", (req, res) => {
   });
 });
 
-// Admin e super admin podem ver detalhes de um usuário
+// Admin e super admin podem ver detalhes de um monitor
 router.get("/:id", (req, res) => {
   authenticateToken(req, res, () => {
     requireAdminOrSuperAdmin(req, res, () => {
@@ -57,18 +49,18 @@ router.get("/:id", (req, res) => {
   });
 });
 
-// Admin e super admin podem atualizar usuários
+// Apenas super admin pode atualizar monitores
 router.put("/:id", (req, res) => {
   authenticateToken(req, res, () => {
-    requireAdminOrSuperAdmin(req, res, () => {
-      validateBody(updateUsuarioSchema)(req, res, () => {
+    requireSuperAdmin(req, res, () => {
+      validateBody(updateMonitorSchema)(req, res, () => {
         update(req, res);
       });
     });
   });
 });
 
-// Apenas super admin pode deletar usuários
+// Apenas super admin pode deletar monitores
 router.delete("/:id", (req, res) => {
   authenticateToken(req, res, () => {
     requireSuperAdmin(req, res, () => {
@@ -77,11 +69,11 @@ router.delete("/:id", (req, res) => {
   });
 });
 
-// Apenas super admin pode ativar/desativar usuários
-router.patch("/:id/toggle-status", (req, res) => {
+// Admin e super admin podem ver monitores por professor
+router.get("/professor/:professorId", (req, res) => {
   authenticateToken(req, res, () => {
-    requireSuperAdmin(req, res, () => {
-      toggleStatus(req, res);
+    requireAdminOrSuperAdmin(req, res, () => {
+      getByProfessorId(req, res);
     });
   });
 });

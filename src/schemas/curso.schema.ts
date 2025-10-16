@@ -17,7 +17,7 @@ export const createCursoSchema = z.object({
     errorMap: () => ({ message: "Modelo inválido" }),
   }),
 
-  coordenadorId: z.number().int("CoordenadorId deve ser um número inteiro"),
+  coordenadorId: z.string().uuid("CoordenadorId deve ser um UUID válido"),
 
   materias: z
     .array(
@@ -28,7 +28,7 @@ export const createCursoSchema = z.object({
         cargaHoraria: z
           .number()
           .int("Carga horária deve ser um número inteiro"),
-        professorId: z.number().int("ProfessorId deve ser um número inteiro"),
+        professorId: z.string().uuid("ProfessorId deve ser um UUID válido"),
       })
     )
     .optional(),
