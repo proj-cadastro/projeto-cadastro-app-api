@@ -1,10 +1,14 @@
 import { JwtPayload } from "jsonwebtoken";
 import prisma from "../../prisma/client";
 import { LoginDto } from "../../types/usuario.dto";
-import { comparePassword } from "../../utils/hash";
+import { comparePassword, hashPassword } from "../../utils/hash";
 import { generateToken } from "../../utils/jwt";
 import { generateResetCode, sendResetCode } from "../../utils/reset-code";
-import { ResetCodePayload } from "../../types/auth.dto";
+import {
+  ResetCodePayload,
+  ResetPasswordDto,
+  ChangePasswordDto,
+} from "../../types/auth.dto";
 
 export async function loginUsuario(data: LoginDto) {
   const { email, senha } = data;
@@ -81,4 +85,66 @@ export async function comparaCodigo(
       "O código digitado está incorreto. Verifique e tente novamente."
     );
   }
+}
+
+export async function resetarSenha(
+  data: ResetPasswordDto,
+  payload: ResetCodePayload
+) {
+  const { novaSenha } = data;
+
+  // Verificar se o token ainda é válido
+  if (payload.exp * 1000 < Date.now()) {
+    throw new Error("Código expirado, por favor, tente novamente");
+  }
+
+  // Buscar o usuário
+  const user = await prisma.usuario.findUnique({
+    where: { id: payload.userId },
+  });
+
+  if (!user) {
+    throw new Error("Usuário não encontrado");
+  }
+
+  // Hash da nova senha
+  const hashedPassword = await hashPassword(novaSenha);
+
+  // Atualizar a senha
+  await prisma.usuario.update({
+    where: { id: payload.userId },
+    data: { senha: hashedPassword },
+  });
+
+  return { mensagem: "Senha resetada com sucesso" };
+}
+
+export async function alterarSenha(userId: string, data: ChangePasswordDto) {
+  const { senhaAtual, novaSenha } = data;
+
+  // Buscar o usuário
+  const user = await prisma.usuario.findUnique({
+    where: { id: userId },
+  });
+
+  if (!user) {
+    throw new Error("Usuário não encontrado");
+  }
+
+  // Verificar se a senha atual está correta
+  const valid = await comparePassword(senhaAtual, user.senha);
+  if (!valid) {
+    throw new Error("Senha atual incorreta");
+  }
+
+  // Hash da nova senha
+  const hashedPassword = await hashPassword(novaSenha);
+
+  // Atualizar a senha
+  await prisma.usuario.update({
+    where: { id: userId },
+    data: { senha: hashedPassword },
+  });
+
+  return { mensagem: "Senha alterada com sucesso" };
 }

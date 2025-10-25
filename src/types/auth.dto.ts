@@ -3,8 +3,19 @@ export interface AuthResponseDto {
 }
 
 export interface ResetCodePayload {
-  id: number,
-  code: string,
-  iat: number,
-  exp: number
+  userId: string;
+  code: string;
+  iat: number;
+  exp: number;
+}
+
+export interface ResetPasswordDto {
+  novaSenha: string;
+  confirmarSenha: string;
+}
+
+export interface ChangePasswordDto {
+  senhaAtual: string;
+  novaSenha: string;
+  confirmarSenha: string;
 }
