@@ -1,0 +1,38 @@
+module.exports = {
+  preset: "ts-jest",
+  testEnvironment: "node",
+  roots: ["<rootDir>/src"],
+  testMatch: ["**/__tests__/**/*.test.ts", "**/?(*.)+(spec|test).ts"],
+  transform: {
+    "^.+\\.ts$": "ts-jest",
+  },
+  coverageDirectory: "coverage",
+  collectCoverageFrom: [
+    "src/**/*.ts",
+    "!src/**/*.d.ts",
+    "!src/index.ts",
+    "!src/app.ts",
+    "!src/prisma/seed.ts",
+    "!src/prisma/client.ts",
+    "!src/middlewares/*.ts",
+    "!src/**/*.routes.ts",
+    "!src/**/*.controller.ts",
+    "!src/schemas/*.ts",
+    "!src/types/*.ts",
+    "!src/modules/enums/*.ts",
+    "!src/utils/nodemailer.ts",
+    "!src/utils/reset-code.ts",
+    "!src/utils/xlsx.ts",
+  ],
+  coverageReporters: ["text", "lcov", "html"],
+  coverageThreshold: {
+    global: {
+      branches: 77,
+      functions: 90,
+      lines: 91,
+      statements: 92,
+    },
+  },
+  setupFilesAfterEnv: ["<rootDir>/src/__tests__/setup.ts"],
+  testTimeout: 10000,
+};

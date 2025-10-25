@@ -64,7 +64,7 @@ export async function getAllProfessores(filters?: {
   return professors;
 }
 
-export async function getProfessorById(id: number) {
+export async function getProfessorById(id: string) {
   return await prisma.professor.findUnique({
     where: { id },
     include: professorInclude,
@@ -72,23 +72,23 @@ export async function getProfessorById(id: number) {
 }
 
 export async function updateProfessor(
-  id: number,
+  id: string,
   data: Partial<CreateProfessorDto>
 ) {
   await prisma.professor.update({ where: { id }, data });
   return await getProfessorById(id);
 }
 
-export async function deleteProfessor(id: number) {
+export async function deleteProfessor(id: string) {
   return await prisma.professor.delete({ where: { id } });
 }
 
-export async function isProfessorExists(id: number): Promise<boolean> {
+export async function isProfessorExists(id: string): Promise<boolean> {
   const professor = await prisma.professor.findUnique({ where: { id } });
   return !!professor;
 }
 
-export async function isProfessorCoordenador(id: number): Promise<boolean> {
+export async function isProfessorCoordenador(id: string): Promise<boolean> {
   const curso = await prisma.curso.findFirst({ where: { coordenadorId: id } });
   return !!curso;
 }
