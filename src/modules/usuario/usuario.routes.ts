@@ -51,11 +51,9 @@ router.get("/", (req, res) => {
 // Admin e super admin podem ver detalhes de um usuário
 router.get("/:id", (req, res) => {
   authenticateToken(req, res, () => {
-    requireAdminOrSuperAdmin(req, res, () => {
       getById(req, res);
     });
   });
-});
 
 // Admin e super admin podem atualizar usuários
 router.put("/:id", (req, res) => {
