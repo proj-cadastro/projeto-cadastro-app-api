@@ -1,4 +1,5 @@
 import prisma from "../../prisma/client";
+import { Prisma } from "@prisma/client";
 import {
   CreateMonitorDto,
   UpdateMonitorDto,
@@ -49,7 +50,7 @@ export class MonitorService {
 
     try {
       // Criar monitor e usuário em uma transação
-      const result = await prisma.$transaction(async (tx) => {
+      const result = await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
         // Criar o monitor
         const monitor = await tx.monitor.create({
           data: {
@@ -226,7 +227,7 @@ export class MonitorService {
     }
 
     return await prisma
-      .$transaction(async (tx) => {
+      .$transaction(async (tx: Prisma.TransactionClient) => {
         // Atualizar monitor
         const updatedMonitor = await tx.monitor.update({
           where: { id },
@@ -283,7 +284,7 @@ export class MonitorService {
   async delete(id: string) {
     const monitor = await this.findById(id);
 
-    return await prisma.$transaction(async (tx) => {
+    return await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
       // Se há usuário vinculado, remover primeiro
       if (monitor.usuario) {
         await tx.usuario.delete({

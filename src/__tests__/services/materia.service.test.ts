@@ -4,6 +4,8 @@ import {
   getMateriaById,
   updateMateria,
   deleteMateria,
+  checkCoursesId,
+  isMateriaUnicaEmCurso,
 } from "../../modules/materia/materia.service";
 import { CreateMateriaDto } from "../../types/materia.dto";
 
@@ -17,8 +19,13 @@ jest.mock("../../prisma/client", () => ({
       update: jest.fn(),
       delete: jest.fn(),
     },
+    curso: {
+      findMany: jest.fn(),
+    },
     cursoMateria: {
       deleteMany: jest.fn(),
+      createMany: jest.fn(),
+      count: jest.fn(),
     },
   },
 }));
@@ -143,6 +150,26 @@ describe("Materia Service", () => {
       expect(mockPrisma.materia.findUnique).toHaveBeenCalled();
       expect(result).toEqual(mockMateriaWithRelations);
     });
+
+    it("should update materia and replace cursos when cursos provided", async () => {
+      const updateData = { nome: "Programação III", cursos: [{ cursoId: "curso-id-456" }] } as any;
+
+      mockPrisma.materia.update.mockResolvedValue(mockMateria);
+      mockPrisma.cursoMateria.deleteMany.mockResolvedValue({ count: 1 });
+      mockPrisma.cursoMateria.createMany = jest.fn().mockResolvedValue({ count: 1 });
+      mockPrisma.materia.findUnique.mockResolvedValue({
+        ...mockMateriaWithRelations,
+        cursos: [{ curso: { id: "curso-id-456", nome: "Outra" } }],
+      });
+
+      const result = await updateMateria("materia-id-123", updateData);
+
+      expect(mockPrisma.materia.update).toHaveBeenCalledWith({ where: { id: "materia-id-123" }, data: { nome: "Programação III" } });
+      expect(mockPrisma.cursoMateria.deleteMany).toHaveBeenCalledWith({ where: { materiaId: "materia-id-123" } });
+      expect(mockPrisma.cursoMateria.createMany).toHaveBeenCalled();
+      expect(mockPrisma.materia.findUnique).toHaveBeenCalled();
+      expect(result.cursos).toBeDefined();
+    });
   });
 
   describe("deleteMateria", () => {
@@ -156,6 +183,40 @@ describe("Materia Service", () => {
         where: { id: "materia-id-123" },
       });
       expect(result).toEqual(mockMateria);
+    });
+  });
+
+  describe("checkCoursesId", () => {
+    it("returns true when all cursoIds exist", async () => {
+      const cursoIds = ["c1", "c2"];
+      mockPrisma.curso.findMany = jest.fn().mockResolvedValue([{ id: "c1" }, { id: "c2" }]);
+
+      const result = await checkCoursesId(cursoIds);
+      expect(mockPrisma.curso.findMany).toHaveBeenCalledWith({ where: { id: { in: cursoIds } }, select: { id: true } });
+      expect(result).toBe(true);
+    });
+
+    it("returns false when some cursoIds are missing", async () => {
+      const cursoIds = ["c1", "c2", "c3"];
+      mockPrisma.curso.findMany = jest.fn().mockResolvedValue([{ id: "c1" }, { id: "c2" }]);
+
+      const result = await checkCoursesId(cursoIds);
+      expect(result).toBe(false);
+    });
+  });
+
+  describe("isMateriaUnicaEmCurso", () => {
+    it("returns true when count is 1", async () => {
+      mockPrisma.cursoMateria.count = jest.fn().mockResolvedValue(1);
+      const result = await isMateriaUnicaEmCurso("m1");
+      expect(mockPrisma.cursoMateria.count).toHaveBeenCalledWith({ where: { materiaId: "m1" } });
+      expect(result).toBe(true);
+    });
+
+    it("returns false when count is greater than 1", async () => {
+      mockPrisma.cursoMateria.count = jest.fn().mockResolvedValue(2);
+      const result = await isMateriaUnicaEmCurso("m1");
+      expect(result).toBe(false);
     });
   });
 });
