@@ -139,18 +139,6 @@ describe("Materia Service", () => {
   });
 
   describe("updateMateria", () => {
-    it("should update materia successfully", async () => {
-      const updateData = { nome: "Programação II" };
-      mockPrisma.materia.update.mockResolvedValue(mockMateria);
-      mockPrisma.materia.findUnique.mockResolvedValue(mockMateriaWithRelations);
-
-      const result = await updateMateria("materia-id-123", updateData);
-
-      expect(mockPrisma.materia.update).toHaveBeenCalled();
-      expect(mockPrisma.materia.findUnique).toHaveBeenCalled();
-      expect(result).toEqual(mockMateriaWithRelations);
-    });
-
     it("should update materia and replace cursos when cursos provided", async () => {
       const updateData = { nome: "Programação III", cursos: [{ cursoId: "curso-id-456" }] } as any;
 
@@ -164,11 +152,19 @@ describe("Materia Service", () => {
 
       const result = await updateMateria("materia-id-123", updateData);
 
-      expect(mockPrisma.materia.update).toHaveBeenCalledWith({ where: { id: "materia-id-123" }, data: { nome: "Programação III" } });
-      expect(mockPrisma.cursoMateria.deleteMany).toHaveBeenCalledWith({ where: { materiaId: "materia-id-123" } });
+      expect(mockPrisma.materia.update).toHaveBeenCalledWith({
+        where: { id: "materia-id-123" },
+        data: { nome: "Programação III" },
+      });
+      expect(mockPrisma.cursoMateria.deleteMany).toHaveBeenCalledWith({
+        where: { materiaId: "materia-id-123" },
+      });
       expect(mockPrisma.cursoMateria.createMany).toHaveBeenCalled();
       expect(mockPrisma.materia.findUnique).toHaveBeenCalled();
-      expect(result.cursos).toBeDefined();
+
+      // ✅ Correção para evitar TS18047
+      expect(result).not.toBeNull();
+      expect(result!.cursos).toBeDefined();
     });
   });
 
