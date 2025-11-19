@@ -7,6 +7,16 @@ import * as hash from "../../utils/hash";
 jest.mock("../../utils/password-generator");
 jest.mock("../../utils/hash");
 
+
+beforeEach(() => {
+  jest.spyOn(console, 'error').mockImplementation(() => {}); 
+});
+
+afterEach(() => {
+  jest.restoreAllMocks(); 
+});
+
+
 describe("MonitorService", () => {
   let service: MonitorService;
 
@@ -15,7 +25,6 @@ describe("MonitorService", () => {
     jest.clearAllMocks();
   });
 
-  // ------------------- CREATE -------------------
   describe("create", () => {
     it("deve criar um monitor com sucesso", async () => {
       const mockData = {
@@ -109,7 +118,7 @@ describe("MonitorService", () => {
       await expect(service.create(mockData)).rejects.toThrow("Já existe um usuário cadastrado com este email");
     });
 
-    // Casos adicionais
+    
     it("deve logar erro se falhar ao enviar email", async () => {
       const mockData = {
         nome: "Monitor Teste",
@@ -159,7 +168,7 @@ describe("MonitorService", () => {
     });
   });
 
-  // ------------------- FIND ALL -------------------
+  
   describe("findAll", () => {
     it("deve listar todos os monitores com paginação", async () => {
       const mockMonitores = [{ id: "1", nome: "Monitor 1" }, { id: "2", nome: "Monitor 2" }];
@@ -174,7 +183,7 @@ describe("MonitorService", () => {
     });
   });
 
-  // ------------------- FIND BY ID -------------------
+  
   describe("findById", () => {
     it("deve retornar um monitor por ID", async () => {
       const mockMonitor = { id: "monitor-123", nome: "Monitor Teste" };
@@ -190,7 +199,7 @@ describe("MonitorService", () => {
     });
   });
 
-  // ------------------- UPDATE -------------------
+  
   describe("update", () => {
     it("deve atualizar um monitor", async () => {
       const mockMonitor = {
@@ -229,7 +238,7 @@ describe("MonitorService", () => {
       );
     });
 
-    // Casos adicionais
+    
     it("deve lançar erro se professorId for inválido", async () => {
       const mockMonitor = { id: "monitor-123", cargaHorariaSemanal: 20, usuario: null };
       const updateData = { professorId: "prof-invalido" };
@@ -274,7 +283,7 @@ describe("MonitorService", () => {
     });
   });
 
-  // ------------------- DELETE -------------------
+  
   describe("delete", () => {
     it("deve deletar um monitor sem usuário", async () => {
       const mockMonitor = { id: "monitor-123", usuario: null };
@@ -304,7 +313,7 @@ describe("MonitorService", () => {
       expect(result).toEqual(mockMonitor);
     });
 
-    // Caso adicional
+   
     it("deve lançar erro se transação falhar ao deletar", async () => {
       const mockMonitor = { id: "monitor-123", usuario: null };
       (prisma.monitor.findUnique as jest.Mock).mockResolvedValue(mockMonitor);
@@ -314,7 +323,7 @@ describe("MonitorService", () => {
     });
   });
 
-  // ------------------- FIND BY PROFESSOR -------------------
+  
   describe("findByProfessorId", () => {
     it("deve retornar monitores de um professor", async () => {
       const mockMonitores = [{ id: "1", professorId: "prof-123" }, { id: "2", professorId: "prof-123" }];
@@ -325,7 +334,7 @@ describe("MonitorService", () => {
       expect(prisma.monitor.findMany).toHaveBeenCalledWith(expect.objectContaining({ where: { professorId: "prof-123" } }));
     });
 
-    // Caso adicional
+    
     it("deve retornar array vazio se não houver monitores", async () => {
       (prisma.monitor.findMany as jest.Mock).mockResolvedValue([]);
       const result = await service.findByProfessorId("prof-123");
