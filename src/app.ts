@@ -20,6 +20,24 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+// Health check endpoint
+app.get("/", (req, res) => {
+  res.status(200).json({
+    message: "API is running",
+    version: "1.0.20",
+    timestamp: new Date().toISOString(),
+  });
+});
+
+// Health check endpoint alternativo
+app.get("/health", (req, res) => {
+  res.status(200).json({
+    status: "healthy",
+    uptime: process.uptime(),
+    timestamp: new Date().toISOString(),
+  });
+});
+
 app.use("/cursos", cursoRoutes);
 app.use("/professores", professorRoutes);
 app.use("/materias", materiaRoutes);

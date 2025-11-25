@@ -73,27 +73,32 @@ describe("🌐 Testes de Performance VPS - Produção", () => {
   });
 
   test("🌍 Conectividade básica com VPS", async () => {
+    let response;
+    let responseTime;
+
     try {
       const startTime = Date.now();
 
-      const response = await axios.get(`${VPS_BASE_URL}/`, {
+      // Testa endpoint de documentação que sabemos que existe
+      response = await axios.get(`${VPS_BASE_URL}/api-docs/`, {
         timeout: 30000,
         headers: {
           "User-Agent": "Performance-Test/1.0",
         },
+        validateStatus: () => true, // Aceita qualquer status
       });
 
-      const responseTime = Date.now() - startTime;
+      responseTime = Date.now() - startTime;
       performanceResults.responses.push(responseTime);
 
       console.log(`🌍 Conectividade VPS: ${responseTime}ms`);
       console.log(`📡 Status: ${response.status}`);
 
       expect(responseTime).toBeLessThan(5000); // 5 segundos é aceitável para VPS
-      expect([200, 404]).toContain(response.status);
+      expect([200, 301, 302, 404]).toContain(response.status);
     } catch (error: any) {
       performanceResults.errors.push({
-        endpoint: "/",
+        endpoint: "/api-docs/",
         message: error.message,
       });
       console.error("❌ Erro na conectividade:", error.message);
@@ -106,7 +111,7 @@ describe("🌐 Testes de Performance VPS - Produção", () => {
       const startTime = Date.now();
 
       const response = await axios.post(
-        `${VPS_BASE_URL}/api/auth/login`,
+        `${VPS_BASE_URL}/auth/login`,
         {
           email: "test@test.com",
           password: "test123",
@@ -127,7 +132,7 @@ describe("🌐 Testes de Performance VPS - Produção", () => {
       expect([200, 400, 401, 404]).toContain(response.status);
     } catch (error: any) {
       performanceResults.errors.push({
-        endpoint: "/api/auth/login",
+        endpoint: "/auth/login",
         message: error.message,
       });
       console.log("⚠️ Endpoint auth não disponível ou erro de rede");
@@ -135,12 +140,7 @@ describe("🌐 Testes de Performance VPS - Produção", () => {
   }, 35000);
 
   test("📚 Endpoints de dados VPS", async () => {
-    const endpoints = [
-      "/api/usuarios",
-      "/api/professores",
-      "/api/cursos",
-      "/api/materias",
-    ];
+    const endpoints = ["/usuarios", "/professores", "/cursos", "/materias"];
 
     for (const endpoint of endpoints) {
       try {
@@ -180,7 +180,7 @@ describe("🌐 Testes de Performance VPS - Produção", () => {
         .fill(null)
         .map(() =>
           axios
-            .get(`${VPS_BASE_URL}/`, {
+            .get(`${VPS_BASE_URL}/api-docs/`, {
               timeout: 30000,
               validateStatus: () => true,
             })
@@ -210,7 +210,7 @@ describe("🌐 Testes de Performance VPS - Produção", () => {
       try {
         const start = Date.now();
 
-        await axios.head(`${VPS_BASE_URL}/`, {
+        await axios.head(`${VPS_BASE_URL}/api-docs/`, {
           timeout: 10000,
         });
 

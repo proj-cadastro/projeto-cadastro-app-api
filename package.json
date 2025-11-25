@@ -12,7 +12,8 @@
     "test:coverage": "jest --coverage",
     "test:performance": "jest performance-report.test.ts",
     "test:vps": "./test-vps.sh",
-    "test:vps-direct": "jest vps-performance.test.ts"
+    "test:vps-direct": "jest vps-performance.test.ts",
+    "test:vps-env": "export $(cat .env.vps 2>/dev/null | xargs) && jest vps-performance.test.ts"
   },
   "keywords": [],
   "author": "",
